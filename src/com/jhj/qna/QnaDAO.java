@@ -5,6 +5,7 @@ import java.util.List;
 import com.jhj.board.BoardDAO;
 import com.jhj.board.BoardDTO;
 import com.jhj.board.BoardReplyDTO;
+import com.jhj.page.RowNum;
 import com.jhj.board.BoardReplyDAO;
 
 public class QnaDAO implements BoardDAO, BoardReplyDAO {
@@ -28,7 +29,7 @@ public class QnaDAO implements BoardDAO, BoardReplyDAO {
 	}
 
 	@Override
-	public List<BoardDTO> selectList(int startRow, int lastRow, String kind, String search) throws Exception {
+	public List<BoardDTO> selectList(RowNum rowNum) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -52,7 +53,7 @@ public class QnaDAO implements BoardDAO, BoardReplyDAO {
 	}
 
 	@Override
-	public int delete(BoardDTO boardDTO) throws Exception {
+	public int delete(int num) throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
 	}

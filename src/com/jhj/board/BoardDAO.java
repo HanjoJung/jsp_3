@@ -2,13 +2,15 @@ package com.jhj.board;
 
 import java.util.List;
 
+import com.jhj.page.RowNum;
+
 public interface BoardDAO {
 
 	// getCount
 	public int getCount(String kind, String search) throws Exception;
 
 	// selectList
-	public List<BoardDTO> selectList(int startRow, int lastRow, String kind, String search) throws Exception;
+	public List<BoardDTO> selectList(RowNum rowNum) throws Exception;
 
 	// selectOne
 	public BoardDTO selectOne(int num) throws Exception;
@@ -20,6 +22,6 @@ public interface BoardDAO {
 	public int update(BoardDTO boardDTO) throws Exception;
 
 	// delete
-	public int delete(BoardDTO boardDTO) throws Exception;
+	public int delete(int num) throws Exception;
 
 }
