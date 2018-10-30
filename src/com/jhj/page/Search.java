@@ -10,6 +10,9 @@ public class Search {
 
 	public void setKind(String kind) {
 		this.kind = kind;
+		if (this.kind == null || this.kind.equals("")) {
+			this.kind = "title";
+		}
 	}
 
 	public String getSearch() {
@@ -18,6 +21,9 @@ public class Search {
 
 	public void setSearch(String search) {
 		this.search = search;
+		if (this.search == null) {
+			this.search = "";
+		}
 	}
 
 }

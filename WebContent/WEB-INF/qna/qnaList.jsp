@@ -2,7 +2,6 @@
 <%@page import="com.jhj.board.BoardDTO"%>
 <%@page import="java.util.List"%>
 <%@page import="com.jhj.page.MakePager"%>
-<%@page import="com.jhj.notice.NoticeDAO"%>
 <%@page import="com.jhj.board.BoardDAO"%>
 <%@page import="com.jhj.page.Search"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -23,11 +22,11 @@
 
 	<div class="container-fluid" align="center">
 		<div class="row">
-			<h1 style="float: left;">Notice</h1>
+			<h1 style="float: left;">QNA</h1>
 		</div>
 
 		<div class="row">
-			<form class="form-inline" action="./noticeList.do"
+			<form class="form-inline" action="./qnaList.do"
 				style="float: left;">
 				<div class="form-group">
 					<select class="form-control" id="sel1"
@@ -41,7 +40,6 @@
 				<button type="submit" class="btn btn-default">Submit</button>
 			</form>
 		</div>
-		
 		<div class="row">
 			<table class="table table-hover table-bordered">
 				<tr>
@@ -56,7 +54,7 @@
 				%>
 				<tr>
 					<td><%=boardDTO.getNum()%></td>
-					<td><a href="./noticeSelectOne.do?num=<%=boardDTO.getNum()%>"><%=boardDTO.getTitle()%></a></td>
+					<td><a href="./qnaSelectOne.do?num=<%=boardDTO.getNum()%>"><%=boardDTO.getTitle()%></a></td>
 					<td><%=boardDTO.getWriter()%></td>
 					<td><%=boardDTO.getReg_date()%></td>
 					<td><%=boardDTO.getHit()%></td>
@@ -65,24 +63,25 @@
 					}
 				%>
 			</table>
-			<a href="./noticeWriteForm.jsp" style="float: left;"><button>새글	작성</button></a>
+			<a href="./qnaWriteForm.do" style="float: left;"><button>새글
+					작성</button></a>
 
 			<ul class="pagination">
 				<%
 					if (pager.getCurBlock() > 1) {
 				%>
 				<li><a
-					href="./noticeList.do?curPage=<%=1%>&kind=<%=pager.getSearch().getKind()%>&search=<%=pager.getSearch().getSearch()%>"><span
+					href="./qnaList.do?curPage=<%=1%>&kind=<%=pager.getSearch().getKind()%>&search=<%=pager.getSearch().getSearch()%>"><span
 						class="	glyphicon glyphicon-step-backward"></span></a></li>
 				<li><a
-					href="./noticeList.do?curPage=<%=pager.getStartNum() - 1%>&kind=<%=pager.getSearch().getKind()%>&search=<%=pager.getSearch().getSearch()%>"><span
+					href="./qnaList.do?curPage=<%=pager.getStartNum() - 1%>&kind=<%=pager.getSearch().getKind()%>&search=<%=pager.getSearch().getSearch()%>"><span
 						class="glyphicon glyphicon-chevron-left"></span></a></li>
 				<%
 					}
 					for (int i = pager.getStartNum(); i <= pager.getLastNum(); i++) {
 				%>
 				<li><a
-					href="./noticeList.do?curPage=<%=i%>
+					href="./qnaList.do?curPage=<%=i%>
 					<%-- &kind=<%=pager.getSearch().getKind()%>&search=<%=pager.getSearch().getSearch()%> --%>
 					"><%=i%></a></li>
 				<%
@@ -90,10 +89,10 @@
 					if (pager.getCurBlock() < pager.getTotalBlock()) {
 				%>
 				<li><a
-					href="./noticeList.do?curPage=<%=pager.getLastNum() + 1%>&kind=<%=pager.getSearch().getKind()%>&search=<%=pager.getSearch().getSearch()%>"><span
+					href="./qnaList.do?curPage=<%=pager.getLastNum() + 1%>&kind=<%=pager.getSearch().getKind()%>&search=<%=pager.getSearch().getSearch()%>"><span
 						class="glyphicon glyphicon-chevron-right"></span></a></li>
 				<li><a
-					href="./noticeList.do?curPage=<%=pager.getTotalPage()%>&kind=<%=pager.getSearch().getKind()%>&search=<%=pager.getSearch().getSearch()%>"><span
+					href="./qnaList.do?curPage=<%=pager.getTotalPage()%>&kind=<%=pager.getSearch().getKind()%>&search=<%=pager.getSearch().getSearch()%>"><span
 						class="glyphicon glyphicon-step-forward"></span></a></li>
 				<%
 					}

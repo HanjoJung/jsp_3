@@ -2,7 +2,6 @@
 <%@page import="com.jhj.file.FileDTO"%>
 <%@page import="com.jhj.file.FileDAO"%>
 <%@page import="com.jhj.board.BoardDTO"%>
-<%@page import="com.jhj.notice.NoticeDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 	<% 
@@ -57,9 +56,9 @@
 				</tr>
 				
 			</table>
-			<a href="./noticeList.do"><button>목록으로</button></a> 
-			<a href="./noticeUpdateForm.do?num=<%=dto.getNum()%>"><button>수정</button></a>
-			<a href="./noticeDeleteProcess.do?num=<%=dto.getNum()%>"><button>삭제</button></a>
+			<a href="./qnaList.do"><button>목록으로</button></a> 
+			<a href="./qnaUpdateForm.do?num=<%=dto.getNum()%>"><button>수정</button></a>
+			<a href="./qnaDeleteProcess.do?num=<%=dto.getNum()%>"><button>삭제</button></a>
 		</div>
 	</div>
 	<%@ include file="../../../../../../../temp/footer.jsp"%>

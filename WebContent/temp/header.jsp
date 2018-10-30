@@ -18,7 +18,7 @@
 				<li><a
 					href="<%=request.getContextPath()%>/member/memberList.do">MEMBER</a></li>
 				<li><a href="<%=request.getContextPath()%>/qna/qnaList.do">QNA</a></li>
-				<li><a href="./qna/q">PRICING</a></li>
+				<li><a href="<%=request.getContextPath()%>">PRICING</a></li>
 				<li><a href="<%=request.getContextPath()%>">CONTACT</a></li>
 			</ul>
 		</div>

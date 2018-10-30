@@ -3,11 +3,12 @@ package com.jhj.board;
 import java.util.List;
 
 import com.jhj.page.RowNum;
+import com.jhj.page.Search;
 
 public interface BoardDAO {
 
 	// getCount
-	public int getCount(String kind, String search) throws Exception;
+	public int getCount(Search search) throws Exception;
 
 	// selectList
 	public List<BoardDTO> selectList(RowNum rowNum) throws Exception;

@@ -1,4 +1,4 @@
-package com.jhj.notice;
+package com.jhj.qna;
 
 import java.util.List;
 
@@ -15,11 +15,11 @@ import com.jhj.page.RowNum;
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
-public class NoticeService {
-	private NoticeDAO noticeDAO;
+public class QnaService {
+	private QnaDAO qnaDAO;
 
-	public NoticeService() {
-		noticeDAO = new NoticeDAO();
+	public QnaService() {
+		qnaDAO = new QnaDAO();
 	}
 
 	public ActionFoward selectList(HttpServletRequest request, HttpServletResponse response) {
@@ -39,8 +39,8 @@ public class NoticeService {
 		List<BoardDTO> ar = null;
 		Pager pager = null;
 		try {
-			ar = noticeDAO.selectList(rowNum);
-			int totalCount = noticeDAO.getCount(rowNum.getSearch());
+			ar = qnaDAO.selectList(rowNum);
+			int totalCount = qnaDAO.getCount(rowNum.getSearch());
 			pager = makePager.makePage(totalCount);
 		} catch (Exception e) {
 			actionFoward.setPath("../index.jsp");
@@ -48,7 +48,7 @@ public class NoticeService {
 		}
 		request.setAttribute("list", ar);
 		request.setAttribute("pager", pager);
-		actionFoward.setPath("../WEB-INF/notice/noticeList.jsp");
+		actionFoward.setPath("../WEB-INF/qna/qnaList.jsp");
 		actionFoward.setCheck(true);
 
 		return actionFoward;
@@ -59,24 +59,22 @@ public class NoticeService {
 		BoardDTO boardDTO = null;
 		ActionFoward actionFoward = new ActionFoward();
 		actionFoward.setCheck(false);
-		actionFoward.setPath("./noticeList.do");
+		actionFoward.setPath("./qnaList.do");
 		try {
-			boardDTO = noticeDAO.selectOne(num);
+			boardDTO = qnaDAO.selectOne(num);
 			FileDAO fileDAO = new FileDAO();
 			List<FileDTO> ar = fileDAO.selectList(num, "N");
 			request.setAttribute("dto", boardDTO);
 			request.setAttribute("list", ar);
 			actionFoward.setCheck(true);
-			actionFoward.setPath("../WEB-INF/notice/noticeSelectOne.jsp");
+			actionFoward.setPath("../WEB-INF/qna/qnaSelectOne.jsp");
 		} catch (Exception e) {
-			actionFoward.setCheck(false);
-			actionFoward.setPath("./noticeList.do");
 			e.printStackTrace();
 		}
 
 		if (boardDTO == null) {
 			actionFoward.setCheck(false);
-			actionFoward.setPath("./noticeList.do");
+			actionFoward.setPath("./qnaList.do");
 		}
 		return actionFoward;
 	}
@@ -91,10 +89,10 @@ public class NoticeService {
 
 			// path 경로에 파일 업로드가 끝났습니다
 			// 파일의 정보
-			NoticeDTO noticeDTO = new NoticeDTO();
-			noticeDTO.setTitle(multi.getParameter("title"));
-			noticeDTO.setWriter(multi.getParameter("writer"));
-			noticeDTO.setContents(multi.getParameter("contents"));
+			QnaDTO qnaDTO = new QnaDTO();
+			qnaDTO.setTitle(multi.getParameter("title"));
+			qnaDTO.setWriter(multi.getParameter("writer"));
+			qnaDTO.setContents(multi.getParameter("contents"));
 			FileDTO f1 = new FileDTO();
 			String fname = multi.getFilesystemName("f1"); // 파라미터의 이름
 			String oname = multi.getOriginalFileName("f1");
@@ -111,35 +109,26 @@ public class NoticeService {
 			 * File f = multi.getFile("f1"); Enumeration e = multi.getFileNames();
 			 */ // 파라미터 이름들
 
-			NoticeDAO dao = new NoticeDAO();
-			int num = dao.getNum();
-			noticeDTO.setNum(num);
-			int result = dao.insert(noticeDTO);
+			QnaDAO dao = new QnaDAO();
+			int result = dao.insert(qnaDTO);
 
-			f1.setNum(num);
-			f2.setNum(num);
-			f1.setKind("N");
-			f2.setKind("N");
 
-			FileDAO fileDAO = new FileDAO();
-			int result1 = fileDAO.insert(f1);
-			int result2 = fileDAO.insert(f2);
 
 			String str = "등록 완료";
 			actionFoward.setCheck(true);
 			actionFoward.setPath("../common/result.jsp");
-			if (result ==0 || result1 == 0 || result2 == 0) {
+			if (result ==0) {
 				actionFoward.setCheck(false);
-				actionFoward.setPath("./noticeWriterForm.do");
+				actionFoward.setPath("./qnaWriterForm.do");
 			}
 
 			// map과 같은 형태로 request 속성 추가
 			request.setAttribute("message", str);
-			request.setAttribute("path", "../WEB-INF/notice/noticeList.jsp");
+			request.setAttribute("path", "../WEB-INF/qna/qnaList.jsp");
 
 		} catch (Exception e) {
 			actionFoward.setCheck(false);
-			actionFoward.setPath("./noticeWriterForm.do");
+			actionFoward.setPath("./qnaWriterForm.do");
 			e.printStackTrace();
 		}
 
@@ -151,24 +140,24 @@ public class NoticeService {
 		BoardDTO boardDTO = null;
 		ActionFoward actionFoward = new ActionFoward();
 		actionFoward.setCheck(false);
-		actionFoward.setPath("./noticeList.do");
+		actionFoward.setPath("./qnaList.do");
 		try {
-			boardDTO = noticeDAO.selectOne(num);
+			boardDTO = qnaDAO.selectOne(num);
 			FileDAO fileDAO = new FileDAO();
 			List<FileDTO> ar = fileDAO.selectList(num, "N");
 			request.setAttribute("dto", boardDTO);
 			request.setAttribute("list", ar);
 			actionFoward.setCheck(true);
-			actionFoward.setPath("../WEB-INF/notice/noticeSelectOne.jsp");
+			actionFoward.setPath("../WEB-INF/qna/qnaSelectOne.jsp");
 		} catch (Exception e) {
 			actionFoward.setCheck(false);
-			actionFoward.setPath("./noticeList.do");
+			actionFoward.setPath("./qnaList.do");
 			e.printStackTrace();
 		}
 
 		if (boardDTO == null) {
 			actionFoward.setCheck(false);
-			actionFoward.setPath("./noticeList.do");
+			actionFoward.setPath("./qnaList.do");
 		}
 		return actionFoward;
 	}

@@ -9,18 +9,18 @@ import java.util.List;
 import com.jhj.board.BoardDAO;
 import com.jhj.board.BoardDTO;
 import com.jhj.page.RowNum;
+import com.jhj.page.Search;
 import com.jhj.util.DBConnector;
-import com.oreilly.servlet.MultipartRequest;
 
 public class NoticeDAO implements BoardDAO {
 
 	@Override
-	public int getCount(String kind, String search) throws Exception {
+	public int getCount(Search search) throws Exception {
 		Connection con = DBConnector.getConnect();
-		String sql = "select count(num) from notice where " + kind + " like ?";
+		String sql = "select count(num) from notice where " + search.getKind() + " like ?";
 
 		PreparedStatement st = con.prepareStatement(sql);
-		st.setString(1, "%" + search + "%");
+		st.setString(1, "%" + search.getSearch() + "%");
 		ResultSet rs = st.executeQuery();
 		rs.next();
 		int result = rs.getInt(1);
@@ -88,7 +88,7 @@ public class NoticeDAO implements BoardDAO {
 		ResultSet rs = st.executeQuery();
 		rs.next();
 		int num = rs.getInt(1);
-		
+
 		DBConnector.disConnect(rs, st, con);
 		return num;
 	}

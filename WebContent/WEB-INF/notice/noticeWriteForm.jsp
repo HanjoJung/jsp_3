@@ -21,7 +21,7 @@
 
 	<div class="container-fluid">
 		<div class="row">
-			<form action="noticeWriteProcess.jsp" method="post" 
+			<form action="noticeWriteProcess.do" method="post" 
 			enctype="multipart/form-data">
 				<div class="form-group">
 					<label for="title">제목:</label> <input type="text"
