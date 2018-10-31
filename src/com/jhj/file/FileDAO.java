@@ -20,7 +20,7 @@ public class FileDAO {
 		st.setInt(1, num);
 		st.setString(2, kind);
 		ResultSet rs = st.executeQuery();
-		while (rs.next()) {
+		while(rs.next()) {
 			FileDTO dto = new FileDTO();
 			dto.setFnum(rs.getInt("fnum"));
 			dto.setFname(rs.getString("fname"));
@@ -33,7 +33,7 @@ public class FileDAO {
 		DBConnector.disConnect(st, con);
 		return ar;
 	}
-
+	
 	public int insert(FileDTO fileDTO) throws Exception {
 
 		Connection con = DBConnector.getConnect();
@@ -47,18 +47,7 @@ public class FileDAO {
 		int result = st.executeUpdate();
 
 		DBConnector.disConnect(st, con);
-		return result;
-	}
 
-	public int delete(int num) throws Exception {
-		Connection con = DBConnector.getConnect();
-		String sql = "delete from upload where num = ?";
-
-		PreparedStatement st = con.prepareStatement(sql);
-		st.setInt(1, num);
-		int result = st.executeUpdate();
-
-		DBConnector.disConnect(st, con);
 		return result;
 	}
 }

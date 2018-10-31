@@ -13,32 +13,6 @@ import com.jhj.page.Search;
 import com.jhj.util.DBConnector;
 
 public class NoticeDAO implements BoardDAO {
-	
-	public int hitUp(int num) throws Exception{
-		Connection con = DBConnector.getConnect();
-		String sql = "select hit from notice where num=?";
-
-		PreparedStatement st = con.prepareStatement(sql);
-		ResultSet rs = st.executeQuery();
-		rs.next();
-		int result = rs.getInt(1)+1;
-
-		DBConnector.disConnect(rs, st, con);
-		return result;
-	}
-	
-	public int getNum() throws Exception {
-		Connection con = DBConnector.getConnect();
-		String sql = "select notice_seq.nextval from dual";
-
-		PreparedStatement st = con.prepareStatement(sql);
-		ResultSet rs = st.executeQuery();
-		rs.next();
-		int num = rs.getInt(1);
-
-		DBConnector.disConnect(rs, st, con);
-		return num;
-	}
 
 	@Override
 	public int getCount(Search search) throws Exception {
@@ -105,6 +79,20 @@ public class NoticeDAO implements BoardDAO {
 		return dto;
 	}
 
+	// seq
+	public int getNum() throws Exception {
+		Connection con = DBConnector.getConnect();
+		String sql = "select notice_seq.nextval from dual";
+
+		PreparedStatement st = con.prepareStatement(sql);
+		ResultSet rs = st.executeQuery();
+		rs.next();
+		int num = rs.getInt(1);
+
+		DBConnector.disConnect(rs, st, con);
+		return num;
+	}
+
 	@Override
 	public int insert(BoardDTO boardDTO) throws Exception {
 		Connection con = DBConnector.getConnect();
@@ -125,16 +113,18 @@ public class NoticeDAO implements BoardDAO {
 	@Override
 	public int update(BoardDTO boardDTO) throws Exception {
 		Connection con = DBConnector.getConnect();
-		String sql = "update notice set title=?, contents=?, hit=? where num=?";
+		String sql = "update notice set title=?, contents=?, writer=?, hit=? where num=?";
 
 		PreparedStatement st = con.prepareStatement(sql);
 		st.setString(1, boardDTO.getTitle());
 		st.setString(2, boardDTO.getContents());
-		st.setInt(3, boardDTO.getHit());
-		st.setInt(4, boardDTO.getNum());
+		st.setString(3, boardDTO.getWriter());
+		st.setInt(4, boardDTO.getHit());
+		st.setInt(5, boardDTO.getNum());
 		int result = st.executeUpdate();
 
 		DBConnector.disConnect(st, con);
+
 		return result;
 	}
 
@@ -148,6 +138,8 @@ public class NoticeDAO implements BoardDAO {
 		int result = st.executeUpdate();
 
 		DBConnector.disConnect(st, con);
+
 		return result;
+
 	}
 }

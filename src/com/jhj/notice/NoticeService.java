@@ -1,8 +1,5 @@
 package com.jhj.notice;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.jhj.action.ActionFoward;
 import com.jhj.board.BoardDTO;
-import com.jhj.board.BoardService;
 import com.jhj.file.FileDAO;
 import com.jhj.file.FileDTO;
 import com.jhj.page.MakePager;
@@ -19,7 +15,7 @@ import com.jhj.page.RowNum;
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
-public class NoticeService implements BoardService {
+public class NoticeService {
 	private NoticeDAO noticeDAO;
 
 	public NoticeService() {
@@ -52,8 +48,7 @@ public class NoticeService implements BoardService {
 		}
 		request.setAttribute("list", ar);
 		request.setAttribute("pager", pager);
-		request.setAttribute("board", "notice");
-		actionFoward.setPath("../WEB-INF/view/board/boardList.jsp");
+		actionFoward.setPath("../WEB-INF/notice/noticeList.jsp");
 		actionFoward.setCheck(true);
 
 		return actionFoward;
@@ -71,192 +66,110 @@ public class NoticeService implements BoardService {
 			List<FileDTO> ar = fileDAO.selectList(num, "N");
 			request.setAttribute("dto", boardDTO);
 			request.setAttribute("list", ar);
-			request.setAttribute("board", "notice");
 			actionFoward.setCheck(true);
-			actionFoward.setPath("../WEB-INF/view/board/boardSelectOne.jsp");
+			actionFoward.setPath("../WEB-INF/notice/noticeSelectOne.jsp");
 		} catch (Exception e) {
 			actionFoward.setCheck(false);
-			actionFoward.setPath("./boardList.do");
+			actionFoward.setPath("./noticeList.do");
 			e.printStackTrace();
 		}
 
 		if (boardDTO == null) {
 			actionFoward.setCheck(false);
-			actionFoward.setPath("./boardList.do");
+			actionFoward.setPath("./noticeList.do");
 		}
 		return actionFoward;
 	}
 
 	public ActionFoward insert(HttpServletRequest request, HttpServletResponse response) {
+		String path = request.getServletContext().getRealPath("upload");
+		int max = 1024 * 1024 * 10;
+		MultipartRequest multi;
 		ActionFoward actionFoward = new ActionFoward();
-		String method = request.getMethod();
-		if (method.equals("POST")) {
-			String message = "실패";
-			String path = "./noticeList.do";
-			actionFoward.setCheck(false);
-			actionFoward.setPath("../view/board/boardWrite.do");
-			// 파일의 최대 크기 byte 단위
-			int max = 1024 * 1024 * 10;
-			// 파일의 저장공간
-			String save = request.getServletContext().getRealPath("upload");
-			// file 객체 생성
-			File file = new File(save);
-			// 디렉토리 여부 확인
-			if (!file.exists()) {// 디렉토리가 없으면
-				// 디렉토리 생성
-				file.mkdirs();
+		try {
+			multi = new MultipartRequest(request, path, max, "UTF-8", new DefaultFileRenamePolicy());
+
+			// path 경로에 파일 업로드가 끝났습니다
+			// 파일의 정보
+			NoticeDTO noticeDTO = new NoticeDTO();
+			noticeDTO.setTitle(multi.getParameter("title"));
+			noticeDTO.setWriter(multi.getParameter("writer"));
+			noticeDTO.setContents(multi.getParameter("contents"));
+			FileDTO f1 = new FileDTO();
+			String fname = multi.getFilesystemName("f1"); // 파라미터의 이름
+			String oname = multi.getOriginalFileName("f1");
+			f1.setFname(fname);
+			f1.setOname(oname);
+
+			FileDTO f2 = new FileDTO();
+			fname = multi.getFilesystemName("f2"); // 파라미터의 이름
+			oname = multi.getOriginalFileName("f2");
+			f2.setFname(fname);
+			f2.setOname(oname);
+
+			/*
+			 * File f = multi.getFile("f1"); Enumeration e = multi.getFileNames();
+			 */ // 파라미터 이름들
+
+			NoticeDAO dao = new NoticeDAO();
+			int num = dao.getNum();
+			noticeDTO.setNum(num);
+			int result = dao.insert(noticeDTO);
+
+			f1.setNum(num);
+			f2.setNum(num);
+			f1.setKind("N");
+			f2.setKind("N");
+
+			FileDAO fileDAO = new FileDAO();
+			int result1 = fileDAO.insert(f1);
+			int result2 = fileDAO.insert(f2);
+
+			String str = "등록 완료";
+			actionFoward.setCheck(true);
+			actionFoward.setPath("../common/result.jsp");
+			if (result ==0 || result1 == 0 || result2 == 0) {
+				actionFoward.setCheck(false);
+				actionFoward.setPath("./noticeWriterForm.do");
 			}
-			MultipartRequest multi;
-			try {
-				multi = new MultipartRequest(request, save, max, "UTF-8", new DefaultFileRenamePolicy());
 
-				// path 경로에 파일 업로드가 끝났습니다
-				// 파일의 정보
-				NoticeDTO noticeDTO = new NoticeDTO(); // DTO 생성
-				noticeDTO.setTitle(multi.getParameter("title"));
-				noticeDTO.setWriter(multi.getParameter("writer"));
-				noticeDTO.setContents(multi.getParameter("contents"));
-				noticeDTO.setNum(noticeDAO.getNum());
-				int result = noticeDAO.insert(noticeDTO);
-
-				if (result > 0) {
-					FileDAO fileDAO = new FileDAO();
-					// 파일의 파라미터명을 모은 것
-					Enumeration<Object> e = multi.getFileNames();
-					while (e.hasMoreElements()) {
-						String p = (String) e.nextElement();
-						if (multi.getOriginalFileName(p) != null) {
-							FileDTO fileDTO = new FileDTO();
-							fileDTO.setKind("N");
-							fileDTO.setNum(noticeDTO.getNum());
-							fileDTO.setFname(multi.getFilesystemName(p));
-							fileDTO.setOname(multi.getOriginalFileName(p));
-							fileDAO.insert(fileDTO);
-						}
-					}
-					message = "성공";
-					request.setAttribute("message", message);
-					request.setAttribute("path", path);
-					actionFoward.setCheck(true);
-					actionFoward.setPath("../WEB-INF/view/common/result.jsp");
-				} else {
-					actionFoward.setCheck(true);
-					actionFoward.setPath("../WEB-INF/view/common/result.jsp");
-				}
-
-			} catch (Exception e) {
-				request.setAttribute("message", message);
-				request.setAttribute("path", path);
-				e.printStackTrace();
-			}
 			// map과 같은 형태로 request 속성 추가
-			request.setAttribute("message", message);
-			request.setAttribute("path", path);
-		} else {
-			request.setAttribute("board", "notice");
-			actionFoward.setCheck(true);
-			actionFoward.setPath("../WEB-INF/view/board/boardWrite.jsp");
-		}
+			request.setAttribute("message", str);
+			request.setAttribute("path", "../WEB-INF/notice/noticeList.jsp");
 
-		return actionFoward;
-	}
-
-	@Override
-	public ActionFoward update(HttpServletRequest request, HttpServletResponse response) {
-		ActionFoward actionFoward = new ActionFoward();
-		String method = request.getMethod();
-
-		if (method.equals("POST")) {
-			int max = 1024 * 1024 * 10;
-			String path = request.getServletContext().getRealPath("upload");
-			String message = "실패";
-			File file = new File(path);
-			if (!file.exists()) {
-				file.mkdirs();
-			}
-			try {
-				MultipartRequest multi = new MultipartRequest(request, path, max, "UTF-8",
-						new DefaultFileRenamePolicy());
-				NoticeDTO noticeDTO = new NoticeDTO();
-				int num = Integer.parseInt(multi.getParameter("num"));
-				noticeDTO.setNum(num);
-				noticeDTO.setTitle(multi.getParameter("title"));
-				noticeDTO.setContents(multi.getParameter("contents"));
-				noticeDTO.setHit(noticeDAO.hitUp(num));
-
-				int result = noticeDAO.update(noticeDTO);
-				if (result > 0) {
-
-					FileDAO fileDAO = new FileDAO();
-					// 파일의 파라미터명을 모은 것
-					Enumeration<Object> e = multi.getFileNames();
-					while (e.hasMoreElements()) {
-						String key = e.nextElement().toString();
-						FileDTO fileDTO = new FileDTO();
-						fileDTO.setKind("N");
-						fileDTO.setNum(noticeDTO.getNum());
-						fileDTO.setFname(multi.getFilesystemName(key));
-						fileDTO.setOname(multi.getOriginalFileName(key));
-						fileDAO.insert(fileDTO);
-					}
-					message = "성공";
-					request.setAttribute("message", message);
-					request.setAttribute("path", "./noticeList.do");
-				} else {
-					request.setAttribute("message", message);
-					request.setAttribute("path", "./noticeList.do");
-				}
-			} catch (Exception e) {
-				request.setAttribute("message", message);
-				request.setAttribute("path", "./noticeList.do");
-				e.printStackTrace();
-			}
-			actionFoward.setCheck(true);
-			actionFoward.setPath("../WEB-INF/view/common/result.jsp");
-
-		} else {
-			try {
-				int num = Integer.parseInt(request.getParameter("num"));
-				BoardDTO boardDTO = noticeDAO.selectOne(num);
-				FileDAO fileDAO = new FileDAO();
-				List<FileDTO> files = fileDAO.selectList(num, "N");
-				request.setAttribute("board", "notice");
-				request.setAttribute("dto", boardDTO);
-				request.setAttribute("files", files);
-				actionFoward.setCheck(true);
-				actionFoward.setPath("../WEB-INF/view/board/boardUpdate.jsp");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		} catch (Exception e) {
+			actionFoward.setCheck(false);
+			actionFoward.setPath("./noticeWriterForm.do");
+			e.printStackTrace();
 		}
 
 		return actionFoward;
 	}
 
 	public ActionFoward delete(HttpServletRequest request, HttpServletResponse response) {
+		int num = Integer.parseInt(request.getParameter("num"));
+		BoardDTO boardDTO = null;
 		ActionFoward actionFoward = new ActionFoward();
+		actionFoward.setCheck(false);
+		actionFoward.setPath("./noticeList.do");
 		try {
-			int num = Integer.parseInt(request.getParameter("num"));
-			int result = noticeDAO.delete(num);
-			if (result > 0) {
-				FileDAO fileDAO = new FileDAO();
-				fileDAO.delete(num);
-
-				System.out.println(request.getServletContext().getRealPath("upload"));
-				request.setAttribute("message", "성공");
-				request.setAttribute("path", "./noticeList.do");
-			} else {
-				request.setAttribute("message", "실패");
-				request.setAttribute("path", "./noticeList.do");
-			}
+			boardDTO = noticeDAO.selectOne(num);
+			FileDAO fileDAO = new FileDAO();
+			List<FileDTO> ar = fileDAO.selectList(num, "N");
+			request.setAttribute("dto", boardDTO);
+			request.setAttribute("list", ar);
+			actionFoward.setCheck(true);
+			actionFoward.setPath("../WEB-INF/notice/noticeSelectOne.jsp");
 		} catch (Exception e) {
-			request.setAttribute("message", "실패");
-			request.setAttribute("path", "./noticeList.do");
+			actionFoward.setCheck(false);
+			actionFoward.setPath("./noticeList.do");
 			e.printStackTrace();
 		}
-		actionFoward.setCheck(true);
-		actionFoward.setPath("../WEB-INF/view/common/result.jsp");
+
+		if (boardDTO == null) {
+			actionFoward.setCheck(false);
+			actionFoward.setPath("./noticeList.do");
+		}
 		return actionFoward;
 	}
-
 }

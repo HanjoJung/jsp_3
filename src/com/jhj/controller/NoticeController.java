@@ -36,21 +36,17 @@ public class NoticeController extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 
-		String commend = request.getPathInfo();
+		String info = request.getPathInfo();
 		NoticeService noticeService = new NoticeService();
-
+		
 		ActionFoward actionFoward = null;
 
-		if (commend.equals("/noticeList.do")) {
+		if (info.equals("/noticeList.do")) {
 			actionFoward = noticeService.selectList(request, response);
-		} else if (commend.equals("/noticeSelectOne.do")) {
+		} else if (info.equals("/noticeSelectOne.do")) {
 			actionFoward = noticeService.selectOne(request, response);
-		} else if (commend.equals("/noticeWrite.do")) {
-			actionFoward = noticeService.insert(request, response);
-		} else if (commend.equals("/noticeUpdate.do")) {
-			actionFoward = noticeService.update(request, response);
-		} else if (commend.equals("/noticeDelete.do")) {
-			actionFoward = noticeService.delete(request, response);
+		} else if (info.equals("/noticeWriteProcess.do")) {
+
 		}
 		if (actionFoward.isCheck()) {
 			RequestDispatcher view = request.getRequestDispatcher(actionFoward.getPath());

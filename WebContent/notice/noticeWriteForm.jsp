@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+	request.setCharacterEncoding("UTF-8");
+	response.setCharacterEncoding("UTF-8");
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,22 +11,18 @@
 <title>Bootstrap Theme Company Page</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<c:import url="../../../temp/bootstrap.jsp"></c:import>
-
+<%@ include file="../../../../../../../temp/bootstrap.jsp"%>
 </head>
 <body id="myPage" data-spy="scroll" data-target=".navbar"
 	data-offset="60">
 
-	<c:import url="../../../temp/header.jsp"></c:import>
+	<%@ include file="../../../../../../../temp/header.jsp"%>
 
 
 	<div class="container-fluid">
 		<div class="row">
-			<h1>${board.toUpperCase()}Writer</h1>
-		</div>
-		<div class="row">
-			<form action="${board}Write.do" method="post"
-				enctype="multipart/form-data">
+			<form action="noticeWriteProcess.jsp" method="post" 
+			enctype="multipart/form-data">
 				<div class="form-group">
 					<label for="title">제목:</label> <input type="text"
 						class="form-control" id="title" placeholder="Enter title"
@@ -50,6 +49,6 @@
 			</form>
 		</div>
 	</div>
-	<c:import url="../../../temp/footer.jsp"></c:import>
+	<%@ include file="../../../../../../../temp/footer.jsp"%>
 </body>
 </html>

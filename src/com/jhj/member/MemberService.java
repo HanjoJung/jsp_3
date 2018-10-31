@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.jhj.action.ActionFoward;
 import com.jhj.board.BoardService;
-
+ 
 public class MemberService implements BoardService {
 	private MembarDAO membarDAO;
 

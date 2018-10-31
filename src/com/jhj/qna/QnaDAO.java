@@ -28,20 +28,6 @@ public class QnaDAO implements BoardDAO, BoardReplyDAO {
 		return 0;
 	}
 
-	public int getNum() throws Exception {
-		Connection con = DBConnector.getConnect();
-		String sql = "select qna_seq.nextval from dual";
-
-		PreparedStatement st = con.prepareStatement(sql);
-		ResultSet rs = st.executeQuery();
-		rs.next();
-		int num = rs.getInt(1);
-
-		DBConnector.disConnect(rs, st, con);
-		return num;
-	}
-
-
 	@Override
 	public int getCount(Search search) throws Exception {
 		Connection con = DBConnector.getConnect();
@@ -78,8 +64,6 @@ public class QnaDAO implements BoardDAO, BoardReplyDAO {
 			dto.setWriter(rs.getString("writer"));
 			dto.setReg_date(rs.getDate("reg_date"));
 			dto.setHit(rs.getInt("hit"));
-			dto.setRef(rs.getInt("ref"));
-			dto.setDepth(rs.getInt("depth"));
 			ar.add(dto);
 		}
 
@@ -112,14 +96,13 @@ public class QnaDAO implements BoardDAO, BoardReplyDAO {
 	@Override
 	public int insert(BoardDTO boardDTO) throws Exception {
 		Connection con = DBConnector.getConnect();
-		String sql = "insert into qna values(?,?,?,?,sysdate,0,?,0,0)";
+		String sql = "insert into qna values(?,?,?,?,sysdate,0)";
 
 		PreparedStatement st = con.prepareStatement(sql);
 		st.setInt(1, boardDTO.getNum());
 		st.setString(2, boardDTO.getTitle());
 		st.setString(3, boardDTO.getContents());
 		st.setString(4, boardDTO.getWriter());
-		st.setInt(5, boardDTO.getNum());
 		int result = st.executeUpdate();
 
 		DBConnector.disConnect(st, con);
