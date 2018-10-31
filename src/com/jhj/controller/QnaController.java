@@ -18,33 +18,39 @@ import com.jhj.qna.QnaService;
 @WebServlet("/QnaController")
 public class QnaController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public QnaController() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public QnaController() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 
-		String info = request.getPathInfo();
+		String commend = request.getPathInfo();
 		QnaService qnaService = new QnaService();
-		
+
 		ActionFoward actionFoward = null;
 
-		if (info.equals("/qnaList.do")) {
+		if (commend.equals("/qnaList.do")) {
 			actionFoward = qnaService.selectList(request, response);
-		} else if (info.equals("/qnaSelectOne.do")) {
+		} else if (commend.equals("/qnaSelectOne.do")) {
 			actionFoward = qnaService.selectOne(request, response);
-		} else if (info.equals("/qnaWriteProcess.do")) {
-
+		} else if (commend.equals("/qnaWrite.do")) {
+			actionFoward = qnaService.insert(request, response);
+		} else if (commend.equals("/qnaUpdate.do")) {
+			actionFoward = qnaService.update(request, response);
+		} else if (commend.equals("/qnaDelete.do")) {
+			actionFoward = qnaService.delete(request, response);
 		}
 		if (actionFoward.isCheck()) {
 			RequestDispatcher view = request.getRequestDispatcher(actionFoward.getPath());
@@ -55,9 +61,11 @@ public class QnaController extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

@@ -9,17 +9,17 @@
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="<%=request.getContextPath()%>/index.jsp">Logo</a>
+			<a class="navbar-brand" href="${pageContext.request.contextPath}/index.jsp">Logo</a>
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav navbar-right">
 				<li><a
-					href="<%=request.getContextPath()%>/notice/noticeList.do">NOTICE</a></li>
+					href="${pageContext.request.contextPath}/notice/noticeList.do">NOTICE</a></li>
 				<li><a
-					href="<%=request.getContextPath()%>/member/memberList.do">MEMBER</a></li>
-				<li><a href="<%=request.getContextPath()%>/qna/qnaList.do">QNA</a></li>
-				<li><a href="<%=request.getContextPath()%>">PRICING</a></li>
-				<li><a href="<%=request.getContextPath()%>">CONTACT</a></li>
+					href="${pageContext.request.contextPath}/member/memberList.do">MEMBER</a></li>
+				<li><a href="${pageContext.request.contextPath}/qna/qnaList.do">QNA</a></li>
+				<li><a href="${pageContext.request.contextPath}">PRICING</a></li>
+				<li><a href="${pageContext.request.contextPath}">CONTACT</a></li>
 			</ul>
 		</div>
 	</div>
