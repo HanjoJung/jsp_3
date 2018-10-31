@@ -21,4 +21,13 @@
 <url-pattern>/qna/*</url-pattern>
 </servlet-mapping>
 
+<servlet>
+<servlet-name>member</servlet-name>
+<servlet-class>com.jhj.controller.MemberController</servlet-class>
+</servlet>
+<servlet-mapping>
+<servlet-name>member</servlet-name>
+<url-pattern>/member/*</url-pattern>
+</servlet-mapping>
+
 </web-app>
